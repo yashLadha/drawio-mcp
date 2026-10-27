@@ -167,6 +167,36 @@ To open diagrams in a self-hosted draw.io instance, set the `DRAWIO_BASE_URL` en
 }
 ```
 
+#### Keeping everything local
+
+`DRAWIO_BASE_URL` only changes where diagrams open. The server still fetches a few resources from draw.io's CDNs, and `search_shapes` sends search terms to the draw.io icon service. Each of these can be redirected or turned off:
+
+| Variable | Default | Used by |
+|----------|---------|---------|
+| `DRAWIO_ICON_SERVICE_URL` | `https://icons.diagrams.net/api/icons` | `search_shapes` icon results. Set to `off` to search the built-in shape libraries only |
+| `DRAWIO_SHAPE_INDEX_URL` | `https://cdn.jsdelivr.net/gh/jgraph/drawio-mcp@main/shape-search/search-index.json` | `search_shapes` index. Accepts a URL or a local path to a copy of [`shape-search/search-index.json`](../shape-search/search-index.json) |
+| `DRAWIO_ELK_URL` | `https://viewer.diagrams.net/js/elk/drawio-elk.min.js` | `postLayout: "elk"`. Accepts a URL or a local path |
+| `DRAWIO_ROUTING_URL` | `https://viewer.diagrams.net/js/libavoid-js/libavoid-routing.js` | `routing: "libavoid"`. Accepts a URL or a local path |
+
+The [`jgraph/drawio`](https://hub.docker.com/r/jgraph/drawio) Docker image serves the ELK bundle and the routing core itself, so a fully local setup against a container published on port 8080 looks like this (Claude Code, `claude mcp add-json -s local drawio '...'`):
+
+```json
+{
+  "type": "stdio",
+  "command": "npx",
+  "args": ["-y", "@drawio/mcp"],
+  "env": {
+    "DRAWIO_BASE_URL": "http://localhost:8080/",
+    "DRAWIO_ICON_SERVICE_URL": "off",
+    "DRAWIO_ELK_URL": "http://localhost:8080/js/elk/drawio-elk.min.js",
+    "DRAWIO_ROUTING_URL": "http://localhost:8080/js/libavoid-js/libavoid-routing.js",
+    "DRAWIO_SHAPE_INDEX_URL": "/path/to/search-index.json"
+  }
+}
+```
+
+npm's `postinstall` still fetches the routing core from `viewer.diagrams.net` once to prime its cache unless the package is installed with `--ignore-scripts` or `DRAWIO_ROUTING_URL` is set at install time. This only downloads code, and failures are ignored.
+
 ## Tools
 
 ### `open_drawio_xml`

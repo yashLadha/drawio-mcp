@@ -39,7 +39,10 @@ const DEFAULT_TIMEOUT_MS = 5000;
 // processes racing across a release boundary (old body paired with the new
 // ETag 304s against a stale source until the NEXT release).
 export const ROUTING_CORE = {
-  url: "https://viewer.diagrams.net/js/libavoid-js/libavoid-routing.js",
+  // Overridable with DRAWIO_ROUTING_URL, same rules as DRAWIO_ELK_URL, e.g.
+  // to load it from a self-hosted draw.io instead of viewer.diagrams.net.
+  url: process.env.DRAWIO_ROUTING_URL ||
+    "https://viewer.diagrams.net/js/libavoid-js/libavoid-routing.js",
   file: "libavoid-routing.json",
 };
 

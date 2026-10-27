@@ -68,7 +68,7 @@ Mechanical slips are repaired, the model is normalized and labels outside the sh
 - `dark` (optional): Dark mode - "true" or "false" (default: false)
 - `postLayout` (optional): `"elk"` runs a server-side ELK re-layout before opening — places the vertices and routes the edges, via the same `drawio-elk` `ElkLayout` bridge the editor and the app server use (loaded from the CDN on first use, cached per user; `DRAWIO_ELK_URL` overrides the source). Use for flowcharts and other directional/hierarchical diagrams. Node sizes are never changed, only positions.
 - `direction` (optional): flow direction for `postLayout` — `"vertical"` (default) or `"horizontal"`.
-- `routing` (optional): `"libavoid"` runs a server-side obstacle-avoiding orthogonal edge-routing pass before opening — keeps vertex positions, reroutes connectors around shapes. Use for hand-placed diagrams where edges would otherwise cross boxes. Alternative to `postLayout`, not a companion.
+- `routing` (optional): `"libavoid"` runs a server-side obstacle-avoiding orthogonal edge-routing pass before opening — keeps vertex positions, reroutes connectors around shapes (the routing core is loaded from the CDN, cached per user; `DRAWIO_ROUTING_URL` overrides the source). Use for hand-placed diagrams where edges would otherwise cross boxes. Alternative to `postLayout`, not a companion.
 
 **Example XML:**
 ```xml
